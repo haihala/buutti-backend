@@ -32,7 +32,7 @@ impl From<ORMBook> for ApiBook {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Copy)]
 pub struct BookId(pub u32);
 
 #[derive(Serialize, Deserialize)]

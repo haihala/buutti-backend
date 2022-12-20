@@ -1,4 +1,4 @@
-use diesel::RunQueryDsl;
+use diesel::{QueryDsl, RunQueryDsl};
 use rocket_sync_db_pools::database;
 
 use crate::{
@@ -24,8 +24,11 @@ pub async fn get_books(connection: Db) -> Vec<ORMBook> {
         .expect("Failed to fetch books")
 }
 
-pub fn get_book(connection: Db, id: BookId) -> Result<ORMBook, NonexistentBook> {
-    todo!()
+pub async fn get_book(connection: Db, book_id: BookId) -> Result<ORMBook, NonexistentBook> {
+    connection
+        .run(move |c| books::table.find(book_id.0 as i32).first(c))
+        .await
+        .map_err(|_| NonexistentBook { book_id })
 }
 
 pub fn delete_book(connection: Db, id: BookId) -> Result<ORMBook, NonexistentBook> {

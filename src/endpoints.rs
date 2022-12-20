@@ -32,6 +32,7 @@ async fn get_book(
 ) -> Result<Json<ApiBook>, NotFound<Json<ApiException>>> {
     Ok(Json(
         database::get_book(connection, BookId(id))
+            .await
             .map(ApiBook::from)
             .map_err(format_error_message)?,
     ))
