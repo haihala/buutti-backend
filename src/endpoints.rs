@@ -18,6 +18,7 @@ async fn post_book(connection: database::Db, book: Json<ApiBook>) -> Json<BookId
 async fn get_books(connection: database::Db) -> Json<Vec<ApiBook>> {
     Json(
         database::get_books(connection)
+            .await
             .into_iter()
             .map(ApiBook::from)
             .collect(),

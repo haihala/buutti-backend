@@ -1,6 +1,10 @@
+use diesel::RunQueryDsl;
 use rocket_sync_db_pools::database;
 
-use crate::types::{ApiBook, BookId, ORMBook};
+use crate::{
+    schema::books,
+    types::{ApiBook, BookId, ORMBook},
+};
 
 #[database("books_db")]
 pub struct Db(diesel::SqliteConnection);
@@ -13,8 +17,11 @@ pub fn store_book(connection: Db, book: ApiBook) -> BookId {
     todo!()
 }
 
-pub fn get_books(connection: Db) -> Vec<ORMBook> {
-    todo!()
+pub async fn get_books(connection: Db) -> Vec<ORMBook> {
+    connection
+        .run(|c| books::table.load(c))
+        .await
+        .expect("Failed to fetch books")
 }
 
 pub fn get_book(connection: Db, id: BookId) -> Result<ORMBook, NonexistentBook> {
