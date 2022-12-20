@@ -11,7 +11,7 @@ pub fn book_routes() -> Vec<Route> {
 
 #[post("/", data = "<book>")]
 async fn post_book(connection: database::Db, book: Json<ApiBook>) -> Json<BookId> {
-    Json(database::store_book(connection, book.into_inner()))
+    Json(database::store_book(connection, book.into_inner()).await)
 }
 
 #[get("/")]
@@ -31,7 +31,7 @@ async fn get_book(
     id: u32,
 ) -> Result<Json<ApiBook>, NotFound<Json<ApiException>>> {
     Ok(Json(
-        database::get_book(connection, BookId(id))
+        database::get_book(connection, BookId(id as i32))
             .await
             .map(ApiBook::from)
             .map_err(format_error_message)?,
@@ -44,7 +44,7 @@ async fn delete_book(
     id: u32,
 ) -> Result<Json<ApiBook>, NotFound<Json<ApiException>>> {
     Ok(Json(
-        database::delete_book(connection, BookId(id))
+        database::delete_book(connection, BookId(id as i32))
             .map(ApiBook::from)
             .map_err(format_error_message)?,
     ))

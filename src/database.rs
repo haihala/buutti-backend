@@ -1,8 +1,8 @@
-use diesel::{QueryDsl, RunQueryDsl};
+use diesel::{dsl::max, QueryDsl, RunQueryDsl};
 use rocket_sync_db_pools::database;
 
 use crate::{
-    schema::books,
+    schema::books::{self, id},
     types::{ApiBook, BookId, ORMBook},
 };
 
@@ -13,8 +13,19 @@ pub struct NonexistentBook {
     pub book_id: BookId,
 }
 
-pub fn store_book(connection: Db, book: ApiBook) -> BookId {
-    todo!()
+pub async fn store_book(connection: Db, book: ApiBook) -> BookId {
+    connection
+        .run(|c| {
+            diesel::insert_into(books::table)
+                .values(ORMBook::from(book))
+                .execute(c)
+                .unwrap();
+
+            books::table.select(max(id)).execute(c)
+        })
+        .await
+        .map(|val| BookId(val as i32))
+        .expect("Failed to get a book id after insert")
 }
 
 pub async fn get_books(connection: Db) -> Vec<ORMBook> {
@@ -31,6 +42,6 @@ pub async fn get_book(connection: Db, book_id: BookId) -> Result<ORMBook, Nonexi
         .map_err(|_| NonexistentBook { book_id })
 }
 
-pub fn delete_book(connection: Db, id: BookId) -> Result<ORMBook, NonexistentBook> {
+pub fn delete_book(connection: Db, book_id: BookId) -> Result<ORMBook, NonexistentBook> {
     todo!()
 }
