@@ -38,7 +38,7 @@ pub async fn get_books(connection: Db) -> Vec<ORMBook> {
 
 pub async fn get_book(connection: Db, book_id: BookId) -> Result<ORMBook, NonexistentBook> {
     connection
-        .run(move |c| books::table.find(book_id.0 as i32).first(c))
+        .run(move |c| books::table.find(book_id.0).first(c))
         .await
         .map_err(|_| NonexistentBook { book_id })
 }
