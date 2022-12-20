@@ -1,3 +1,4 @@
+use rocket::http::Status;
 use rocket::response::status::NotFound;
 use rocket::serde::json::Json;
 use rocket::{delete, get, post, routes, Route};
@@ -42,12 +43,11 @@ async fn get_book(
 async fn delete_book(
     connection: database::Db,
     id: u32,
-) -> Result<Json<ApiBook>, NotFound<Json<ApiException>>> {
-    Ok(Json(
-        database::delete_book(connection, BookId(id as i32))
-            .map(ApiBook::from)
-            .map_err(format_error_message)?,
-    ))
+) -> Result<Status, NotFound<Json<ApiException>>> {
+    Ok(database::delete_book(connection, BookId(id as i32))
+        .await
+        .map(|_| Status::NoContent)
+        .map_err(format_error_message)?)
 }
 
 fn format_error_message(error: database::NonexistentBook) -> NotFound<Json<ApiException>> {

@@ -9,6 +9,7 @@ use crate::{
 #[database("books_db")]
 pub struct Db(diesel::SqliteConnection);
 
+#[derive(Clone, Copy)]
 pub struct NonexistentBook {
     pub book_id: BookId,
 }
@@ -42,6 +43,17 @@ pub async fn get_book(connection: Db, book_id: BookId) -> Result<ORMBook, Nonexi
         .map_err(|_| NonexistentBook { book_id })
 }
 
-pub fn delete_book(connection: Db, book_id: BookId) -> Result<ORMBook, NonexistentBook> {
-    todo!()
+pub async fn delete_book(connection: Db, book_id: BookId) -> Result<(), NonexistentBook> {
+    let error = NonexistentBook { book_id };
+
+    let lines_deleted = connection
+        .run(move |c| diesel::delete(books::table.find(book_id.0)).execute(c))
+        .await
+        .map_err(|_| error)?;
+
+    if lines_deleted == 0 {
+        Err(error)
+    } else {
+        Ok(())
+    }
 }
