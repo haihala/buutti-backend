@@ -1,12 +1,13 @@
 #[macro_use]
 extern crate rocket;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
-}
+mod database;
+mod endpoints;
+mod types;
+
+use endpoints::book_routes;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    rocket::build().mount("/books", book_routes())
 }
