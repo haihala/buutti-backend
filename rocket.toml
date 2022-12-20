@@ -1,2 +1,5 @@
 [global]
 port = 9000
+
+[default.databases.books_db]
+url = "books.db"

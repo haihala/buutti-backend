@@ -5,4 +5,6 @@ edition = "2021"
 
 [dependencies]
 rocket = { version = "0.5.0-rc.2", features = [ "json" ] }
+rocket_sync_db_pools = { version = "0.1.0-rc.2", features = [ "diesel_sqlite_pool" ] }
 serde = "1.0.151"
+diesel = { version = "1.4.8", features = [ "sqlite" ] }
