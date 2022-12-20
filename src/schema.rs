@@ -1,6 +1,6 @@
 table! {
     books (id) {
-        id -> Integer,
+        id -> Nullable<Integer>,
         title -> Text,
         author -> Text,
         year -> Integer,

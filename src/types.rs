@@ -5,7 +5,7 @@ use crate::schema::books;
 #[derive(Queryable, Debug, Insertable)]
 #[table_name = "books"]
 pub struct ORMBook {
-    id: i32,
+    id: Option<i32>,
     title: String,
     author: String,
     year: i32,
@@ -15,7 +15,7 @@ pub struct ORMBook {
 impl From<ApiBook> for ORMBook {
     fn from(value: ApiBook) -> Self {
         Self {
-            id: 0,
+            id: None,
             title: value.title,
             author: value.author,
             year: value.year,
