@@ -36,9 +36,27 @@ pub async fn store_book(connection: Db, book: Book) -> BookId {
         .expect("Failed to get a book id after insert")
 }
 
-pub async fn get_books(connection: Db) -> Vec<Book> {
+pub async fn get_books(
+    connection: Db,
+    query_author: Option<String>,
+    query_title: Option<String>,
+    query_year: Option<i32>,
+) -> Vec<Book> {
     connection
-        .run(|c| books::table.load(c))
+        .run(move |c| {
+            let mut query = books::table.into_boxed();
+            if let Some(author) = query_author {
+                query = query.filter(books::author.eq(author));
+            }
+            if let Some(title) = query_title {
+                query = query.filter(books::title.eq(title));
+            }
+            if let Some(year) = query_year {
+                query = query.filter(books::year.eq(year));
+            }
+
+            query.load(c)
+        })
         .await
         .expect("Failed to fetch books")
 }

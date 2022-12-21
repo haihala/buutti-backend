@@ -15,9 +15,14 @@ async fn post_book(connection: database::Db, book: Json<NewBook>) -> Json<BookId
     Json(database::store_book(connection, book.into_inner().into()).await)
 }
 
-#[get("/")]
-async fn get_books(connection: database::Db) -> Json<Vec<Book>> {
-    Json(database::get_books(connection).await)
+#[get("/?<author>&<title>&<year>")]
+async fn get_books(
+    connection: database::Db,
+    author: Option<String>,
+    title: Option<String>,
+    year: Option<i32>,
+) -> Json<Vec<Book>> {
+    Json(database::get_books(connection, author, title, year).await)
 }
 
 #[get("/<id>")]
