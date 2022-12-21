@@ -28,10 +28,10 @@ async fn get_books(
 #[get("/<id>")]
 async fn get_book(
     connection: database::Db,
-    id: u32,
+    id: i32,
 ) -> Result<Json<Book>, NotFound<Json<ApiException>>> {
     Ok(Json(
-        database::get_book(connection, BookId::new(id as i32))
+        database::get_book(connection, BookId::new(id))
             .await
             .map_err(format_error_message)?,
     ))
@@ -40,9 +40,9 @@ async fn get_book(
 #[delete("/<id>")]
 async fn delete_book(
     connection: database::Db,
-    id: u32,
+    id: i32,
 ) -> Result<Status, NotFound<Json<ApiException>>> {
-    database::delete_book(connection, BookId::new(id as i32))
+    database::delete_book(connection, BookId::new(id))
         .await
         .map(|_| Status::NoContent)
         .map_err(format_error_message)

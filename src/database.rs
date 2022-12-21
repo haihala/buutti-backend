@@ -18,7 +18,7 @@ pub async fn store_book(connection: Db, book: Book) -> BookId {
     connection
         .run(|c| {
             diesel::insert_into(books::table)
-                .values(Book::from(book.clone()))
+                .values(book.clone())
                 .execute(c)
                 .unwrap();
 
