@@ -2,9 +2,9 @@ use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 
 use crate::schema::books;
-#[derive(Queryable, Debug, Insertable)]
+#[derive(Queryable, Debug, Insertable, Serialize, Clone)]
 #[table_name = "books"]
-pub struct ORMBook {
+pub struct Book {
     id: Option<i32>,
     pub title: String,
     pub author: String,
@@ -12,8 +12,8 @@ pub struct ORMBook {
     publisher: Option<String>,
     description: Option<String>,
 }
-impl From<ApiBook> for ORMBook {
-    fn from(value: ApiBook) -> Self {
+impl From<NewBook> for Book {
+    fn from(value: NewBook) -> Self {
         Self {
             id: None,
             title: value.title,
@@ -25,16 +25,17 @@ impl From<ApiBook> for ORMBook {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
-pub struct ApiBook {
+#[derive(Deserialize, Clone)]
+/// Struct for creating new books so that the API gets typed correctly
+pub struct NewBook {
     pub title: String,
     pub author: String,
     pub year: i32,
     publisher: Option<String>,
     description: Option<String>,
 }
-impl From<ORMBook> for ApiBook {
-    fn from(orm_book: ORMBook) -> Self {
+impl From<Book> for NewBook {
+    fn from(orm_book: Book) -> Self {
         Self {
             title: orm_book.title,
             author: orm_book.author,
@@ -45,8 +46,15 @@ impl From<ORMBook> for ApiBook {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Copy)]
-pub struct BookId(pub i32);
+#[derive(Serialize, Clone, Copy)]
+pub struct BookId {
+    pub id: i32,
+}
+impl BookId {
+    pub fn new(id: i32) -> Self {
+        Self { id }
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 pub struct ApiException {
