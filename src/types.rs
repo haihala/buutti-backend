@@ -6,9 +6,9 @@ use crate::schema::books;
 #[table_name = "books"]
 pub struct ORMBook {
     id: Option<i32>,
-    title: String,
-    author: String,
-    year: i32,
+    pub title: String,
+    pub author: String,
+    pub year: i32,
     publisher: Option<String>,
     description: Option<String>,
 }
@@ -25,11 +25,11 @@ impl From<ApiBook> for ORMBook {
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct ApiBook {
-    title: String,
-    author: String,
-    year: i32,
+    pub title: String,
+    pub author: String,
+    pub year: i32,
     publisher: Option<String>,
     description: Option<String>,
 }

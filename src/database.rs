@@ -1,8 +1,8 @@
-use diesel::{dsl::max, QueryDsl, RunQueryDsl};
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use rocket_sync_db_pools::database;
 
 use crate::{
-    schema::books::{self, id},
+    schema::books::{self},
     types::{ApiBook, BookId, ORMBook},
 };
 
@@ -18,14 +18,21 @@ pub async fn store_book(connection: Db, book: ApiBook) -> BookId {
     connection
         .run(|c| {
             diesel::insert_into(books::table)
-                .values(ORMBook::from(book))
+                .values(ORMBook::from(book.clone()))
                 .execute(c)
                 .unwrap();
 
-            books::table.select(max(id)).execute(c)
+            // Since diesel sqlite doesn't support returning the id from the insertion, we have to find it otherhow
+            // Since title+author+year combinations are unique, this is guaranteed to work
+            books::table
+                .filter(books::title.eq(book.title))
+                .filter(books::author.eq(book.author))
+                .filter(books::year.eq(book.year))
+                .select(books::id)
+                .first(c)
         })
         .await
-        .map(|val| BookId(val as i32))
+        .map(|val: Option<i32>| BookId(val.unwrap()))
         .expect("Failed to get a book id after insert")
 }
 
