@@ -15,7 +15,7 @@ Only tested on Windows, as I don't currently have access to other options. There
 ## Quality Assurance
 Use `cargo test -- --test-threads=1` to run tests. You need the extra flags, since all the tests use the database and cargo parallelizes tests by default. `empty.db` is an empty database with the same schem as `books.db`, which is used to start tests on a clean slate.
 
-`clippy` is used as a linter. `rustfmt` is used as a formatter. `cargo-udeps` is used to check that all dependencies are used.
+`clippy` is used as a linter. `rustfmt` is used as a formatter. `cargo-udeps` is used to check that all dependencies are used. Udeps requires nightly.
 
 ### CI
 Github actions is configured to do the following:

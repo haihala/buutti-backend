@@ -31,7 +31,7 @@ jobs:
         run: |
           cargo clippy -- -D warnings
           cargo fmt -- --check
-          cargo udeps
+          cargo +nightly udeps
 
       - name: Test if program starts
         run: |

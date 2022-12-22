@@ -2,7 +2,7 @@ use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 
 use crate::schema::books;
-#[derive(Queryable, Debug, Insertable, Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Queryable, Debug, Insertable, Serialize, Deserialize, Clone, PartialEq, Eq)]
 #[table_name = "books"]
 pub struct Book {
     pub id: Option<i32>,
