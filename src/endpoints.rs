@@ -21,8 +21,12 @@ async fn get_books(
     author: Option<String>,
     title: Option<String>,
     year: Option<i32>,
-) -> Json<Vec<Book>> {
-    Json(database::get_books(connection, author, title, year).await)
+) -> Result<Json<Vec<Book>>, Status> {
+    validate_non_empty(&author)?;
+    validate_non_empty(&title)?;
+    Ok(Json(
+        database::get_books(connection, author, title, year).await,
+    ))
 }
 
 #[get("/<id>")]
@@ -53,4 +57,14 @@ fn format_error_message(error: database::NonexistentBook) -> NotFound<Json<ApiEx
         "Book id {} not found",
         error.book_id.id
     ))))
+}
+
+fn validate_non_empty(input: &Option<String>) -> Result<(), Status> {
+    if let Some(content) = input {
+        if content.len() == 0 {
+            return Err(Status::BadRequest);
+        }
+    }
+
+    Ok(())
 }
