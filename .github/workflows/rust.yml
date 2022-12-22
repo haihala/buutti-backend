@@ -24,6 +24,10 @@ jobs:
         run: |
           ROCKET_DATABASES='{books_db={url="books.db"}}' cargo run &
           sleep 5
-          export LINES_IN_PS_AUX=`ps aux | tee | grep cargo | wc -l`
-          export BACKGROUND_PROCESSES=`jobs | tee | wc -l`
-          [[ $LINES_IN_PS_AUX -gt 1 ]]
+          ps aux
+          echo "\n\n\n"
+          ps aux | grep cargo
+          echo "\n\n\n"
+          jobs
+          echo "\n\n\n"
+          [[ `jobs | wc -l` -gt 0 ]]
