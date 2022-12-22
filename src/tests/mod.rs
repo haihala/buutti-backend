@@ -8,7 +8,7 @@ use super::{
     rocket,
     types::{Book, BookId, NewBook},
 };
-
+mod errors;
 mod happy_case;
 
 const ACTIVE_DATABASE: &'static str = "books.db";

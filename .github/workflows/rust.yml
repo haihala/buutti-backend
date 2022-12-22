@@ -21,7 +21,7 @@ jobs:
         run: cargo build
 
       - name: Test
-        run: ROCKET_DATABASES='{books_db={url="books.db"}}' cargo test
+        run: ROCKET_DATABASES='{books_db={url="books.db"}}' cargo test -- --test-threads=1
 
       - name: Test if program starts
         run: |
