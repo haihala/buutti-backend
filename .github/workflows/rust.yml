@@ -28,7 +28,10 @@ jobs:
         run: ROCKET_DATABASES='{books_db={url="books.db"}}' cargo test -- --test-threads=1
 
       - name: Lint
-        run: cargo clippy -- -D warnings && cargo fmt -- --check && cargo udeps
+        run: |
+          cargo clippy -- -D warnings
+          cargo fmt -- --check
+          cargo udeps
 
       - name: Test if program starts
         run: |
