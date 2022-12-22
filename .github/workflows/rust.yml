@@ -22,4 +22,5 @@ jobs:
         run: |
           cargo run &
           sleep 5
-          ps aux | grep cargo
+          export LINES_IN_PS_AUX=`$(ps aux | grep cargo | wc -l)`
+          [ $LINES_IN_PS_AUX -gt 1 ]
