@@ -17,6 +17,7 @@ jobs:
       - name: Install dev tools
         run: |
           rustup update
+          rustup toolchain install nightly-x86_64-unknown-linux-gnu
           rustup component add clippy
           rustup component add rustfmt
           cargo install cargo-udeps
