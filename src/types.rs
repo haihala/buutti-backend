@@ -2,15 +2,15 @@ use diesel::{Insertable, Queryable};
 use serde::{Deserialize, Serialize};
 
 use crate::schema::books;
-#[derive(Queryable, Debug, Insertable, Serialize, Clone)]
+#[derive(Queryable, Debug, Insertable, Serialize, Deserialize, Clone, PartialEq)]
 #[table_name = "books"]
 pub struct Book {
-    id: Option<i32>,
+    pub id: Option<i32>,
     pub title: String,
     pub author: String,
     pub year: i32,
-    publisher: Option<String>,
-    description: Option<String>,
+    pub publisher: Option<String>,
+    pub description: Option<String>,
 }
 impl From<NewBook> for Book {
     fn from(value: NewBook) -> Self {
@@ -25,14 +25,14 @@ impl From<NewBook> for Book {
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Serialize, Clone)]
 /// Struct for creating new books so that the API gets typed correctly
 pub struct NewBook {
     pub title: String,
     pub author: String,
     pub year: i32,
-    publisher: Option<String>,
-    description: Option<String>,
+    pub publisher: Option<String>,
+    pub description: Option<String>,
 }
 impl From<Book> for NewBook {
     fn from(orm_book: Book) -> Self {
@@ -46,7 +46,7 @@ impl From<Book> for NewBook {
     }
 }
 
-#[derive(Serialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
 pub struct BookId {
     pub id: i32,
 }

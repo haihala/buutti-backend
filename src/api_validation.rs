@@ -24,7 +24,7 @@ pub fn format_error_message(error: database::NonexistentBook) -> NotFound<Json<A
 
 pub fn validate_non_empty(input: &Option<String>) -> Result<(), Status> {
     if let Some(content) = input {
-        if content.len() == 0 {
+        if content.is_empty() {
             return Err(Status::BadRequest);
         }
     }

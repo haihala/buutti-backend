@@ -9,16 +9,19 @@ on:
 jobs:
   CI:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
       - uses: Swatinem/rust-cache@v2
-      
+
       - name: Install dev dependencies
-        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev 
+        run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
 
       - name: Build
         run: cargo build
+
+      - name: Test
+        run: cargo test
 
       - name: Test if program starts
         run: |

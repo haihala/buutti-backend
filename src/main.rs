@@ -7,6 +7,8 @@ mod api_validation;
 mod database;
 mod endpoints;
 mod schema;
+#[cfg(test)]
+mod tests;
 mod types;
 
 use database::Db;
