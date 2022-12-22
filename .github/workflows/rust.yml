@@ -1,4 +1,4 @@
-name: Makefile CI
+name: Basic CI pipeline
 
 on:
   push:
@@ -17,3 +17,9 @@ jobs:
 
       - name: Build
         run: cargo build
+
+      - name: Run
+        run: | 
+          cargo run &
+          sleep 5 &
+          ps aux | grep cargo
