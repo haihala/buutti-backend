@@ -13,13 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
 
       - name: Build
         run: cargo build
 
-      - name: Run
-        run: | 
+      - name: Test if program starts
+        run: |
           cargo run &
-          sleep 5 &
+          sleep 5
           ps aux | grep cargo
