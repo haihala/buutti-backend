@@ -12,6 +12,7 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
       
       - name: Install dev dependencies
         run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev 
@@ -23,5 +24,6 @@ jobs:
         run: |
           ROCKET_DATABASES='{books_db={url="books.db"}}' cargo run &
           sleep 5
-          export LINES_IN_PS_AUX=`ps aux | grep cargo | wc -l`
+          export LINES_IN_PS_AUX=`ps aux | tee | grep cargo | wc -l`
+          export BACKGROUND_PROCESSES=`jobs | tee | wc -l`
           [[ $LINES_IN_PS_AUX -gt 1 ]]
