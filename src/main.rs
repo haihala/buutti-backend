@@ -3,6 +3,7 @@ extern crate diesel;
 
 use rocket::launch;
 
+mod api_validation;
 mod database;
 mod endpoints;
 mod schema;

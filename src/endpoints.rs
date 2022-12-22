@@ -3,8 +3,9 @@ use rocket::response::status::NotFound;
 use rocket::serde::json::Json;
 use rocket::{delete, get, post, routes, Route};
 
+use crate::api_validation::{format_error_message, validate_non_empty, ApiException};
 use crate::database;
-use crate::types::{ApiException, Book, BookId, NewBook};
+use crate::types::{Book, BookId, NewBook};
 
 pub fn book_routes() -> Vec<Route> {
     routes![post_book, get_books, get_book, delete_book]
@@ -50,21 +51,4 @@ async fn delete_book(
         .await
         .map(|_| Status::NoContent)
         .map_err(format_error_message)
-}
-
-fn format_error_message(error: database::NonexistentBook) -> NotFound<Json<ApiException>> {
-    NotFound(Json(ApiException::new(format!(
-        "Book id {} not found",
-        error.book_id.id
-    ))))
-}
-
-fn validate_non_empty(input: &Option<String>) -> Result<(), Status> {
-    if let Some(content) = input {
-        if content.len() == 0 {
-            return Err(Status::BadRequest);
-        }
-    }
-
-    Ok(())
 }

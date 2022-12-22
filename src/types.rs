@@ -55,13 +55,3 @@ impl BookId {
         Self { id }
     }
 }
-
-#[derive(Serialize, Deserialize)]
-pub struct ApiException {
-    message: String,
-}
-impl ApiException {
-    pub fn new(message: String) -> Self {
-        Self { message }
-    }
-}
