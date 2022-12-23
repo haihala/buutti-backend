@@ -31,3 +31,32 @@ fn happy_case() {
     client.check_book_list(vec![]);
     client.teardown();
 }
+
+#[test]
+fn delete_one_of_many() {
+    let client = TestClient::setup_with_books();
+
+    client.delete_book(5);
+
+    let all_books = client.get_all_books();
+    assert!(!all_books.contains(&Book {
+        id: Some(5),
+        title: "Refactoring: Improving the Design of Existing Code".into(),
+        author: "Martin Fowler".into(),
+        year: 1999,
+        publisher: Some("Addison-Wesley Professional".into()),
+        description: Some("First edition".into()),
+    }));
+
+    // Indices of the remaining books didn't get adjusted
+    assert!(all_books.contains(&Book {
+        id: Some(7),
+        title: "Pragmatic Programmer, The: Your journey to mastery".into(),
+        author: "David Thomas".into(),
+        year: 1999,
+        publisher: Some("Addison-Wesley Professional".into()),
+        description: Some("First edition".into()),
+    }));
+
+    client.teardown();
+}

@@ -6,7 +6,7 @@ use super::TestClient;
 fn test_year_filters() {
     let client = TestClient::setup_with_books();
 
-    let all_books = client.get_book_list("".into());
+    let all_books = client.get_all_books();
     assert_eq!(all_books.len(), 7);
     // If the value cannot be parsed to an integer, it is treated as if it didn't exist
     // This may be against the specifications, but it's how rocket handles things by default

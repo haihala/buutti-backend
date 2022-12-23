@@ -106,6 +106,10 @@ impl TestClient {
         assert_eq!(response.into_json::<Vec<Book>>(), expected);
     }
 
+    fn get_all_books(&self) -> Vec<Book> {
+        self.get_book_list("".into())
+    }
+
     fn get_book_list(&self, query_params: String) -> Vec<Book> {
         let response = Self::make_request_expect_status(
             self.client.get(format!("/books?{}", query_params)),
