@@ -20,7 +20,7 @@ async fn post_book(
 ) -> Result<Json<BookId>, BadRequest<Json<ApiException>>> {
     database::store_book(connection, book.into_inner().into())
         .await
-        .map(|id| Json(id))
+        .map(Json)
         .map_err(|_| BadRequest(Some(Json(ApiException::new("Cannot add such book".into())))))
 }
 
