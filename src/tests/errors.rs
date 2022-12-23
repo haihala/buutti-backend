@@ -38,3 +38,23 @@ fn add_duplicate_book() {
 
     client.teardown();
 }
+
+#[test]
+fn invalid_filters() {
+    let client = TestClient::setup_with_books();
+
+    // How additional unknown query filters should be handled wasn't specified, so they are ignored
+    let all_books = client.get_book_list_expect_status("unknown=value".into(), Status::Ok);
+    assert_eq!(all_books.len(), 7);
+
+    // Empty strings for title and author are not tolerated
+    client.get_book_list_expect_status("author=".into(), Status::BadRequest);
+    client.get_book_list_expect_status("title=".into(), Status::BadRequest);
+
+    // If the value cannot be parsed to an integer, it is treated as if it didn't exist
+    // This may be against the specifications, but it's how rocket handles things by default
+    // This can be fixed, if it is.
+    assert_eq!(all_books, client.get_book_list("year=".into()));
+
+    client.teardown();
+}

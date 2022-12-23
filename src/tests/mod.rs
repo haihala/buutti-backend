@@ -111,11 +111,19 @@ impl TestClient {
     }
 
     fn get_book_list(&self, query_params: String) -> Vec<Book> {
+        self.get_book_list_expect_status(query_params, Status::Ok)
+    }
+
+    fn get_book_list_expect_status(&self, query_params: String, status: Status) -> Vec<Book> {
         let response = Self::make_request_expect_status(
             self.client.get(format!("/books?{}", query_params)),
-            Status::Ok,
+            status,
         );
-        response.into_json().unwrap()
+        if status == Status::Ok {
+            response.into_json().unwrap()
+        } else {
+            vec![]
+        }
     }
 
     fn check_book(&self, id: i32, expected: Book) {

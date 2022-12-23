@@ -8,10 +8,6 @@ fn test_year_filters() {
 
     let all_books = client.get_all_books();
     assert_eq!(all_books.len(), 7);
-    // If the value cannot be parsed to an integer, it is treated as if it didn't exist
-    // This may be against the specifications, but it's how rocket handles things by default
-    // This can be fixed, if it is.
-    assert_eq!(all_books, client.get_book_list("year=".into()));
 
     let no_books = client.get_book_list("year=3030".into());
     assert_eq!(no_books, vec![]);
