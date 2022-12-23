@@ -10,7 +10,7 @@ To start the service (On windows):
 1. Install rust through [rustup](https://rustup.rs/)
 2. Run `cargo run` in the repo root directory
 
-Only tested on Windows, as I don't currently have access to other options. There may be issues with sqlite. Had to include both the `.lib` and `.dll` files to get it to compile and run. [CI](#ci) runs on Ubuntu, so if you are trying to get it running on linux, that is a good place to start. You probably need to install sqlite dev libraries and for some reason ubuntu couldn't find the database definition in rocket.toml. Hard to debug through actions, so the solution is a bit of a workaround.
+Only tested on Windows, as I don't currently have access to other options. There may be issues with sqlite. Had to include both the `.lib` and `.dll` files to get it to compile and run. [CI](#ci) runs on Ubuntu, so if you are trying to get it running on linux, that is a good place to start. You probably need to install sqlite dev libraries at least.
 
 ## Quality Assurance
 Use `cargo test -- --test-threads=1` to run tests. You need the extra flags, since all the tests use the database and cargo parallelizes tests by default. `empty.db` is an empty database with the same schem as `books.db`, which is used to start tests on a clean slate.
