@@ -1,5 +1,5 @@
 use rocket::http::Status;
-use rocket::response::status::NotFound;
+use rocket::response::status::{BadRequest, NotFound};
 use rocket::serde::json::Json;
 use rocket::{delete, get, post, routes, Route};
 
@@ -12,8 +12,14 @@ pub fn book_routes() -> Vec<Route> {
 }
 
 #[post("/", data = "<book>")]
-async fn post_book(connection: database::Db, book: Json<NewBook>) -> Json<BookId> {
-    Json(database::store_book(connection, book.into_inner().into()).await)
+async fn post_book(
+    connection: database::Db,
+    book: Json<NewBook>,
+) -> Result<Json<BookId>, BadRequest<Json<ApiException>>> {
+    database::store_book(connection, book.into_inner().into())
+        .await
+        .map(|id| Json(id))
+        .map_err(|_| BadRequest(Some(Json(ApiException::new("Cannot add such book".into())))))
 }
 
 #[get("/?<author>&<title>&<year>")]

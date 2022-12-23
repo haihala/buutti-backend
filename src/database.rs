@@ -14,13 +14,12 @@ pub struct NonexistentBook {
     pub book_id: BookId,
 }
 
-pub async fn store_book(connection: Db, book: Book) -> BookId {
+pub async fn store_book(connection: Db, book: Book) -> Result<BookId, diesel::result::Error> {
     connection
         .run(|c| {
             diesel::insert_into(books::table)
                 .values(book.clone())
-                .execute(c)
-                .unwrap();
+                .execute(c)?;
 
             // Since diesel sqlite doesn't support returning the id from the insertion, we have to find it otherhow
             // Since title+author+year combinations are unique, this is guaranteed to work
@@ -33,7 +32,6 @@ pub async fn store_book(connection: Db, book: Book) -> BookId {
         })
         .await
         .map(|val: Option<i32>| BookId::new(val.unwrap()))
-        .expect("Failed to get a book id after insert")
 }
 
 pub async fn get_books(
