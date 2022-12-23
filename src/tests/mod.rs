@@ -10,6 +10,7 @@ use super::{
 };
 mod errors;
 mod happy_case;
+mod health_check;
 
 const ACTIVE_DATABASE: &'static str = "books.db";
 const BACKUP_DATABASE: &'static str = "books.backup.db";
@@ -73,6 +74,10 @@ impl TestClient {
 
     fn delete_book_expect_status(&self, id: i32, status: Status) {
         Self::make_request_expect_status(self.client.delete(format!("/books/{}", id)), status);
+    }
+
+    fn get_expect_status(&self, url: String, status: Status) -> LocalResponse {
+        Self::make_request_expect_status(self.client.get(url), status)
     }
 
     fn make_request_expect_status(request: LocalRequest, status: Status) -> LocalResponse {

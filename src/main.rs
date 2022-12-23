@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate diesel;
 
-use rocket::launch;
+use rocket::{launch, routes};
 
 mod api_validation;
 mod database;
@@ -19,4 +19,5 @@ fn rocket() -> _ {
     rocket::build()
         .attach(Db::fairing())
         .mount("/books", book_routes())
+        .mount("/health-check", routes![endpoints::health_check])
 }

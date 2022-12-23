@@ -52,3 +52,8 @@ async fn delete_book(
         .map(|_| Status::NoContent)
         .map_err(format_error_message)
 }
+
+#[get("/")]
+pub fn health_check() -> String {
+    "Ok".into()
+}
