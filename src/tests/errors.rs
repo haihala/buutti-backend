@@ -4,14 +4,14 @@ use super::TestClient;
 
 #[test]
 fn get_nonexistent_book() {
-    let client = TestClient::setup();
+    let client = TestClient::setup_empty();
     client.check_book_expect_status(1, None, Status::NotFound);
     client.teardown();
 }
 
 #[test]
 fn delete_nonexistent_book() {
-    let client = TestClient::setup();
+    let client = TestClient::setup_empty();
     client.delete_book_expect_status(1, Status::NotFound);
     client.teardown();
 }

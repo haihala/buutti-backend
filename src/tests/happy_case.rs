@@ -4,7 +4,7 @@ use super::TestClient;
 
 #[test]
 fn happy_case() {
-    let client = TestClient::setup();
+    let client = TestClient::setup_empty();
 
     // Check that the book list starts empty
     client.check_book_list(vec![]);
