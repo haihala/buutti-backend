@@ -1,4 +1,6 @@
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
+use rocket_okapi::gen::OpenApiGenerator;
+use rocket_okapi::request::{OpenApiFromRequest, RequestHeaderInput};
 use rocket_sync_db_pools::database;
 
 use crate::{
@@ -8,6 +10,15 @@ use crate::{
 
 #[database("books_db")]
 pub struct Db(diesel::SqliteConnection);
+impl<'r> OpenApiFromRequest<'r> for Db {
+    fn from_request_input(
+        _gen: &mut OpenApiGenerator,
+        _name: String,
+        _required: bool,
+    ) -> rocket_okapi::Result<RequestHeaderInput> {
+        Ok(RequestHeaderInput::None)
+    }
+}
 
 #[derive(Clone, Copy)]
 pub struct NonexistentBook {

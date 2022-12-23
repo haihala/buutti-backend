@@ -1,7 +1,8 @@
 #[macro_use]
 extern crate diesel;
 
-use rocket::{launch, routes};
+use rocket::launch;
+use rocket_okapi::swagger_ui::{make_swagger_ui, SwaggerUIConfig};
 
 mod api_validation;
 mod database;
@@ -11,13 +12,16 @@ mod schema;
 mod tests;
 mod types;
 
-use database::Db;
-use endpoints::book_routes;
-
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .attach(Db::fairing())
-        .mount("/books", book_routes())
-        .mount("/health-check", routes![endpoints::health_check])
+        .attach(database::Db::fairing())
+        .mount("/", endpoints::endpoints())
+        .mount(
+            "/swagger-ui/",
+            make_swagger_ui(&SwaggerUIConfig {
+                url: "../openapi.json".to_owned(),
+                ..Default::default()
+            }),
+        )
 }

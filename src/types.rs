@@ -1,8 +1,12 @@
 use diesel::{Insertable, Queryable};
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::schema::books;
-#[derive(Queryable, Debug, Insertable, Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[derive(
+    Queryable, Debug, Insertable, Serialize, Deserialize, Clone, PartialEq, Eq, JsonSchema,
+)]
 #[table_name = "books"]
 pub struct Book {
     pub id: Option<i32>,
@@ -25,7 +29,7 @@ impl From<NewBook> for Book {
     }
 }
 
-#[derive(Deserialize, Serialize, Clone)]
+#[derive(Deserialize, Serialize, Clone, JsonSchema)]
 /// Struct for creating new books so that the API gets typed correctly
 pub struct NewBook {
     pub title: String,
@@ -46,7 +50,7 @@ impl From<Book> for NewBook {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq, Eq, JsonSchema)]
 pub struct BookId {
     pub id: i32,
 }

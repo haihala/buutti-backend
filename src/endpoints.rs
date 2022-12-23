@@ -1,17 +1,19 @@
 use rocket::http::Status;
 use rocket::response::status::{BadRequest, NotFound};
 use rocket::serde::json::Json;
-use rocket::{delete, get, post, routes, Route};
+use rocket::{delete, get, post, Route};
+use rocket_okapi::{openapi, openapi_get_routes};
 
 use crate::api_validation::{format_error_message, validate_non_empty, ApiException};
 use crate::database;
 use crate::types::{Book, BookId, NewBook};
 
-pub fn book_routes() -> Vec<Route> {
-    routes![post_book, get_books, get_book, delete_book]
+pub fn endpoints() -> Vec<Route> {
+    openapi_get_routes![post_book, get_books, get_book, delete_book, health_check]
 }
 
-#[post("/", data = "<book>")]
+#[openapi(tag = "books")]
+#[post("/books", data = "<book>")]
 async fn post_book(
     connection: database::Db,
     book: Json<NewBook>,
@@ -22,7 +24,8 @@ async fn post_book(
         .map_err(|_| BadRequest(Some(Json(ApiException::new("Cannot add such book".into())))))
 }
 
-#[get("/?<author>&<title>&<year>")]
+#[openapi(tag = "books")]
+#[get("/books?<author>&<title>&<year>")]
 async fn get_books(
     connection: database::Db,
     author: Option<String>,
@@ -36,7 +39,8 @@ async fn get_books(
     ))
 }
 
-#[get("/<id>")]
+#[openapi(tag = "books")]
+#[get("/books/<id>")]
 async fn get_book(
     connection: database::Db,
     id: i32,
@@ -48,7 +52,8 @@ async fn get_book(
     ))
 }
 
-#[delete("/<id>")]
+#[openapi(tag = "books")]
+#[delete("/books/<id>")]
 async fn delete_book(
     connection: database::Db,
     id: i32,
@@ -59,7 +64,8 @@ async fn delete_book(
         .map_err(format_error_message)
 }
 
-#[get("/")]
-pub fn health_check() -> String {
+#[openapi(tag = "Health-check")]
+#[get("/health-check")]
+fn health_check() -> String {
     "Ok".into()
 }

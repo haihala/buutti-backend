@@ -1,11 +1,13 @@
 use rocket::http::Status;
 use rocket::response::status::NotFound;
 use rocket::serde::json::Json;
+use rocket_okapi::okapi::schemars;
+use rocket_okapi::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::database;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct ApiException {
     message: String,
 }
